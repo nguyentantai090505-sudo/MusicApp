@@ -10,7 +10,6 @@ import com.example.tktmusicapp.ui.screens.auth.LoginScreen
 import com.example.tktmusicapp.ui.screens.auth.RegisterScreen
 import com.example.tktmusicapp.ui.screens.auth.WelcomeScreen
 
-
 @Composable
 fun AppNavGraph(
     navController: NavHostController,
@@ -34,13 +33,30 @@ fun AppNavGraph(
                     navController.navigate(Destinations.CHOOSE_ARTIST) {
                         popUpTo(Destinations.WELCOME) { inclusive = true }
                     }
-                }
+                },
+                onLoginWithGoogle = {
+                    // TODO: Xử lý Firebase Google Auth
+                    // Tạm thời mock thành công
+                    navController.navigate(Destinations.CHOOSE_ARTIST) {
+                        popUpTo(Destinations.WELCOME) { inclusive = true }
+                    }
+                },
+                onLoginWithEmail = { email, password ->
+                    // TODO: Xử lý Firebase Email Auth
+                    // Tạm thời mock thành công
+                    navController.navigate(Destinations.CHOOSE_ARTIST) {
+                        popUpTo(Destinations.WELCOME) { inclusive = true }
+                    }
+                },
+                isLoading = false, // TODO: Lấy từ ViewModel
+                errorMessage = null // TODO: Lấy từ ViewModel
             )
         }
 
         composable(Destinations.REGISTER) {
             RegisterScreen(
                 onNavigateToLogin = { navController.navigate(Destinations.LOGIN) },
+                onNavigateToChooseArtist = { navController.navigate(Destinations.CHOOSE_ARTIST) },
                 onRegisterSuccess = {
                     navController.navigate(Destinations.CHOOSE_ARTIST) {
                         popUpTo(Destinations.WELCOME) { inclusive = true }
@@ -60,5 +76,3 @@ fun AppNavGraph(
         }
     }
 }
-
-
