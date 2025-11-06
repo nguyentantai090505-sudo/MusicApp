@@ -8,11 +8,6 @@
 .cxx
 .externalNativeBuild
 
-# Gradle
-gradle/
-gradle.properties
-gradlew
-gradlew.bat
 
 # Local configuration
 local.properties
