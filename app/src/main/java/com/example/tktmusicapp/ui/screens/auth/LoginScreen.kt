@@ -1,5 +1,7 @@
 package com.example.tktmusicapp.ui.screens.auth
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -10,21 +12,58 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tktmusicapp.ui.theme.*
+import com.example.tktmusicapp.viewmodel.AuthState
+import com.example.tktmusicapp.viewmodel.AuthViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onNavigateToRegister: () -> Unit,
-    onLoginSuccess: () -> Unit,
-    onLoginWithGoogle: () -> Unit,
-    onLoginWithEmail: (email: String, password: String) -> Unit,
-    isLoading: Boolean = false,
-    errorMessage: String? = null
+    onLoginSuccess: () -> Unit
 ) {
+    val viewModel: AuthViewModel = hiltViewModel()
+    val authState by viewModel.authState.collectAsState()
+    val context = LocalContext.current
+
+    // Google Sign-In Launcher
+    val googleLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            account.idToken?.let { token ->
+                viewModel.loginWithGoogle(token)
+            }
+        } catch (e: ApiException) {
+            viewModel.loginWithGoogle("") // Báo lỗi
+        }
+    }
+
+    // Xử lý Success → Chuyển màn hình
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Success -> {
+                onLoginSuccess()
+                viewModel.resetState()
+            }
+            else -> Unit
+        }
+    }
+
+    val isLoading = authState is AuthState.Loading
+    val errorMessage = (authState as? AuthState.Error)?.message
+
     var showEmailLogin by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -37,11 +76,8 @@ fun LoginScreen(
     val gradient = Brush.verticalGradient(
         colors = listOf(GradientStart, GradientMiddle, GradientEnd)
     )
-
-    // Màu nền #121212 cho email login
     val darkBackground = Color(0xFF121212)
 
-    // Chọn background dựa trên mode
     val backgroundModifier = if (showEmailLogin) {
         Modifier.fillMaxSize().background(darkBackground)
     } else {
@@ -50,13 +86,12 @@ fun LoginScreen(
 
     Box(modifier = backgroundModifier) {
         if (showEmailLogin) {
-            // EMAIL LOGIN LAYOUT - Nâng cao các phần tử lên
+            // === EMAIL LOGIN: NỀN TỐI + BACK BUTTON + FORM CAO ===
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(32.dp)
             ) {
-                // Back button - nằm cao hơn
                 IconButton(
                     onClick = {
                         showEmailLogin = false
@@ -72,11 +107,8 @@ fun LoginScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(80.dp)) // Tăng khoảng cách từ top
+                Spacer(modifier = Modifier.height(80.dp))
 
-                // Bỏ dòng text "Đăng nhập với email"
-
-                // Form nhập liệu - nâng cao lên
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -97,6 +129,7 @@ fun LoginScreen(
                     value = password,
                     onValueChange = { password = it },
                     label = { Text("Mật khẩu", color = Color(0xFFB3B3B3)) },
+                    visualTransformation = PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = PrimaryButton,
@@ -107,7 +140,6 @@ fun LoginScreen(
                     enabled = !isLoading
                 )
 
-                // Error message từ Firebase
                 if (!errorMessage.isNullOrEmpty()) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
@@ -119,13 +151,12 @@ fun LoginScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(40.dp)) // Tăng khoảng cách trước nút
+                Spacer(modifier = Modifier.height(40.dp))
 
-                // Login Button - nâng cao lên để không bị bàn phím che
                 Button(
                     onClick = {
                         if (email.isNotEmpty() && password.isNotEmpty()) {
-                            onLoginWithEmail(email, password)
+                            viewModel.loginWithEmail(email, password)
                         }
                     },
                     modifier = Modifier
@@ -135,17 +166,14 @@ fun LoginScreen(
                     enabled = !isLoading && email.isNotEmpty() && password.isNotEmpty()
                 ) {
                     if (isLoading) {
-                        CircularProgressIndicator(
-                            color = TextPrimary,
-                            modifier = Modifier.size(20.dp)
-                        )
+                        CircularProgressIndicator(color = TextPrimary, modifier = Modifier.size(20.dp))
                     } else {
                         Text("Đăng nhập", style = MaterialTheme.typography.bodyLarge)
                     }
                 }
             }
         } else {
-            // DEFAULT LOGIN OPTIONS - Giữ nguyên layout cũ với gradient
+            // === MÀN HÌNH CHÍNH: GRADIENT + TEXT "Đăng nhập" TO ĐÙNG + NÚT CENTER ===
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -163,21 +191,32 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(48.dp))
 
-                // Google Login Button
+                // GOOGLE BUTTON
                 Button(
-                    onClick = onLoginWithGoogle,
+                    onClick = {
+                        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestIdToken("294351049895-0epsmb2go6o3jn3gl04aj5cndnf1aqhv.apps.googleusercontent.com")
+                            .requestEmail()
+                            .build()
+                        val client = GoogleSignIn.getClient(context, gso)
+                        googleLauncher.launch(client.signInIntent)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = PrimaryButton),
                     enabled = !isLoading
                 ) {
-                    Text("Tiếp tục với Google", style = MaterialTheme.typography.bodyLarge)
+                    if (isLoading) {
+                        CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))
+                    } else {
+                        Text("Tiếp tục với Google", style = MaterialTheme.typography.bodyLarge)
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Email Login Button - Show email form
+                // EMAIL BUTTON
                 Button(
                     onClick = { showEmailLogin = true },
                     modifier = Modifier
@@ -191,7 +230,7 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Register section
+                // ĐĂNG KÝ
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
@@ -216,6 +255,18 @@ fun LoginScreen(
                 }
             }
         }
+
+        // Loading overlay toàn màn hình khi Google/Email đang xử lý
+        if (isLoading && !showEmailLogin) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.7f)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = PrimaryButton)
+            }
+        }
     }
 }
 
@@ -225,9 +276,7 @@ fun LoginScreenPreview() {
     TKTMusicAppTheme {
         LoginScreen(
             onNavigateToRegister = {},
-            onLoginSuccess = {},
-            onLoginWithGoogle = {},
-            onLoginWithEmail = { _, _ -> }
+            onLoginSuccess = {}
         )
     }
 }

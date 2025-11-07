@@ -1,7 +1,6 @@
 package com.example.tktmusicapp.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,6 +25,7 @@ fun AppNavGraph(
             )
         }
 
+        // ĐÃ FIX: Chỉ còn 2 param cần thiết
         composable(Destinations.LOGIN) {
             LoginScreen(
                 onNavigateToRegister = { navController.navigate(Destinations.REGISTER) },
@@ -33,31 +33,15 @@ fun AppNavGraph(
                     navController.navigate(Destinations.CHOOSE_ARTIST) {
                         popUpTo(Destinations.WELCOME) { inclusive = true }
                     }
-                },
-                onLoginWithGoogle = {
-                    // TODO: Xử lý Firebase Google Auth
-                    // Tạm thời mock thành công
-                    navController.navigate(Destinations.CHOOSE_ARTIST) {
-                        popUpTo(Destinations.WELCOME) { inclusive = true }
-                    }
-                },
-                onLoginWithEmail = { email, password ->
-                    // TODO: Xử lý Firebase Email Auth
-                    // Tạm thời mock thành công
-                    navController.navigate(Destinations.CHOOSE_ARTIST) {
-                        popUpTo(Destinations.WELCOME) { inclusive = true }
-                    }
-                },
-                isLoading = false, // TODO: Lấy từ ViewModel
-                errorMessage = null // TODO: Lấy từ ViewModel
+                }
             )
         }
 
+        // ĐÃ FIX: Chỉ còn 2 param cần thiết
         composable(Destinations.REGISTER) {
             RegisterScreen(
                 onNavigateToLogin = { navController.navigate(Destinations.LOGIN) },
-                onNavigateToChooseArtist = { navController.navigate(Destinations.CHOOSE_ARTIST) },
-                onRegisterSuccess = {
+                onNavigateToChooseArtist = {
                     navController.navigate(Destinations.CHOOSE_ARTIST) {
                         popUpTo(Destinations.WELCOME) { inclusive = true }
                     }
