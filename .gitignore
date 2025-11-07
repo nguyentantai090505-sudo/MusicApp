@@ -1,0 +1,36 @@
+# Android Studio / IntelliJ
+*.iml
+.idea/
+.gradle
+/local.properties
+/build
+/captures
+.cxx
+.externalNativeBuild
+
+
+# Local configuration
+local.properties
+
+# Firebase
+app/google-services.json
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+
+# Keystore files
+*.jks
+*.keystore
+
+# Backup files
+*~
+
+# Node / React Native (nếu có)
+node_modules/
