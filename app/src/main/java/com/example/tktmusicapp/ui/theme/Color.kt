@@ -18,4 +18,3 @@ val TextHint = Color.White.copy(alpha = 0.6f)
 // Background
 val BackgroundDark = Color(0xFF121212)
 
-val BackgroundMedium = Color(0xFF1E1E1E)

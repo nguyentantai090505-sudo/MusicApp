@@ -2,27 +2,58 @@ package com.example.tktmusicapp.ui.screens.main.tabs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.tktmusicapp.ui.theme.GradientEnd
+import com.example.tktmusicapp.ui.theme.GradientMiddle
+import com.example.tktmusicapp.ui.theme.GradientStart
+import com.example.tktmusicapp.ui.theme.TextHint
+import com.example.tktmusicapp.ui.theme.TextPrimary
 
 @Composable
-fun LibraryScreen() {
-    Box(
+fun LibraryScreen(
+    onNavigateBack: () -> Unit
+) {
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        GradientStart,
+                        GradientMiddle,
+                        GradientEnd
+                    )
+                )
+            )
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
+        IconButton(onClick = onNavigateBack) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Back",
+                tint = Color.White
+            )
+        }
+
         Text(
-            text = "Thư viện của bạn 🎶",
-            color = Color.White,
-            fontWeight = FontWeight.Bold
+            text = "🎵 Your Library",
+            color = TextPrimary,
+            style = MaterialTheme.typography.headlineMedium
         )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Text(text = "You have no saved songs yet.", color = TextHint)
     }
 }

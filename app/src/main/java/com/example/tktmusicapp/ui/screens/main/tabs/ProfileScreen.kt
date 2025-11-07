@@ -3,47 +3,54 @@ package com.example.tktmusicapp.ui.screens.main
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.tktmusicapp.ui.theme.GradientEnd
+import com.example.tktmusicapp.ui.theme.GradientMiddle
+import com.example.tktmusicapp.ui.theme.GradientStart
+import com.example.tktmusicapp.ui.theme.TextHint
+import com.example.tktmusicapp.ui.theme.TextPrimary
 
 @Composable
 fun ProfileScreen(
-    onNavigateToHome: () -> Unit,
-    onNavigateToSearch: () -> Unit,
-    onNavigateToPlayer: () -> Unit
+    onNavigateBack: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        GradientStart,
+                        GradientMiddle,
+                        GradientEnd
+                    )
+                )
+            )
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text("Your Profile", color = Color.White, style = MaterialTheme.typography.titleLarge)
+        IconButton(onClick = onNavigateBack) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Back",
+                tint = Color.White
+            )
+        }
 
-        Spacer(Modifier.height(20.dp))
+        Text(
+            text = "👤 Your Profile",
+            color = TextPrimary,
+            style = MaterialTheme.typography.headlineMedium
+        )
 
-        Icon(Icons.Default.Person, contentDescription = null, tint = Color.White, modifier = Modifier.size(100.dp))
-        Text("TKT User", color = Color.White, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(20.dp))
 
-        Spacer(Modifier.height(24.dp))
-
-        Button(
-            onClick = onNavigateToHome,
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF))
-        ) { Text("Back to Home", color = Color.White) }
-
-        Spacer(Modifier.height(16.dp))
-
-        Button(
-            onClick = onNavigateToSearch,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
-        ) { Text("Search Music", color = Color.White) }
+        Text(text = "This is your profile page.", color = TextHint)
     }
 }

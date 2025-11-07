@@ -1,18 +1,18 @@
+// ui/screens/auth/WelcomeScreen.kt
 package com.example.tktmusicapp.ui.screens.auth
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.tktmusicapp.ui.components.auth.OutlinedAuthButton
+import com.example.tktmusicapp.ui.components.auth.PrimaryAuthButton
 import com.example.tktmusicapp.ui.theme.*
 
 @Composable
@@ -20,88 +20,69 @@ fun WelcomeScreen(
     onNavigateToLogin: () -> Unit,
     onNavigateToRegister: () -> Unit
 ) {
-    val gradient = Brush.verticalGradient(
-        colors = listOf(GradientStart, GradientMiddle, GradientEnd)
-    )
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(gradient)
+            .background(
+                brush = Brush.verticalGradient(
+                    0f to GradientStart,
+                    0.3f to GradientMiddle,  // VÙNG TÍM GIỮA
+                    0.6f to GradientEnd
+                )
+            )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Title
-            Text(
-                text = "Bắt đầu",
-                style = MaterialTheme.typography.headlineLarge,
-                color = TextPrimary,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Subtitle
-            Text(
-                text = "Nghe nhạc theo sở thích của bạn.",
-                style = MaterialTheme.typography.bodyLarge,
-                color = TextSecondary,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(48.dp))
-
-            // Register Button
-            Button(
-                onClick = onNavigateToRegister,
+            // === PHẦN TRÊN: LOGO + "Bắt đầu" ===
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = PrimaryButton)
+                    .weight(1f)
+                    .padding(top = 100.dp)
             ) {
+                Spacer(modifier = Modifier.height(80.dp)) // Chỗ logo
+
                 Text(
-                    text = "Đăng ký miễn phí ",
-                    style = MaterialTheme.typography.labelLarge
+                    text = "Bắt đầu",
+                    style = MaterialTheme.typography.headlineLarge.copy(color = Color.White),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Nghe nhạc theo sở thích của bạn.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = TextSecondary,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
 
-            // Login Button - Outlined
-            Button(
-                onClick = onNavigateToLogin,
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = androidx.compose.ui.graphics.Color.Transparent
-                ),
-                border = androidx.compose.material3.ButtonDefaults.outlinedButtonBorder
+                    .weight(1f)
+                    .padding(bottom = 100.dp)
             ) {
-                Text(
+                PrimaryAuthButton(
+                    text = "Đăng ký miễn phí",
+                    onClick = onNavigateToRegister
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedAuthButton(
                     text = "Đăng nhập",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = TextPrimary
+                    onClick = onNavigateToLogin
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun WelcomeScreenPreview() {
-    TKTMusicAppTheme {
-        WelcomeScreen(
-            onNavigateToLogin = {},
-            onNavigateToRegister = {}
-        )
     }
 }
