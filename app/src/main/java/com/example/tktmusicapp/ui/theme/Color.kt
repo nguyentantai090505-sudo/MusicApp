@@ -16,4 +16,8 @@ val TextSecondary = Color.White.copy(alpha = 0.87f)
 val TextHint = Color.White.copy(alpha = 0.6f)
 
 // Background
+
 val BackgroundDark = Color(0xFF121212)
+
+
+

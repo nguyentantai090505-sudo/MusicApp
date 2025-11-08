@@ -56,6 +56,10 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx")
 
 
+
+    implementation("androidx.compose.material:material-icons-extended")
+
+
     // === GOOGLE SIGN-IN ===
     implementation("com.google.android.gms:play-services-auth:21.2.0")
 

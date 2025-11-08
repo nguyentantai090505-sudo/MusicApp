@@ -8,6 +8,11 @@ import com.example.tktmusicapp.ui.screens.auth.ChooseArtistScreen
 import com.example.tktmusicapp.ui.screens.auth.LoginScreen
 import com.example.tktmusicapp.ui.screens.auth.RegisterScreen
 import com.example.tktmusicapp.ui.screens.auth.WelcomeScreen
+import com.example.tktmusicapp.ui.screens.main.HomeScreen
+import com.example.tktmusicapp.ui.screens.main.PlayerScreen
+import com.example.tktmusicapp.ui.screens.main.ProfileScreen
+import com.example.tktmusicapp.ui.screens.main.SearchScreen
+import com.example.tktmusicapp.ui.screens.main.tabs.LibraryScreen
 
 @Composable
 fun AppNavGraph(
@@ -25,7 +30,6 @@ fun AppNavGraph(
             )
         }
 
-        // ĐÃ FIX: Chỉ còn 2 param cần thiết
         composable(Destinations.LOGIN) {
             LoginScreen(
                 onNavigateToRegister = { navController.navigate(Destinations.REGISTER) },
@@ -37,7 +41,6 @@ fun AppNavGraph(
             )
         }
 
-        // ĐÃ FIX: Chỉ còn 2 param cần thiết
         composable(Destinations.REGISTER) {
             RegisterScreen(
                 onNavigateToLogin = { navController.navigate(Destinations.LOGIN) },
@@ -49,14 +52,41 @@ fun AppNavGraph(
             )
         }
 
+        // ĐÃ FIX: onContinue → onComplete, navigate đúng HOME + clear backstack
         composable(Destinations.CHOOSE_ARTIST) {
             ChooseArtistScreen(
-                onComplete = {
-                    navController.navigate(Destinations.MAIN) {
+                onContinue = {
+                    navController.navigate(Destinations.HOME) {
                         popUpTo(Destinations.WELCOME) { inclusive = true }
+                        launchSingleTop = true
                     }
                 }
             )
+        }
+
+        composable(Destinations.HOME) {
+            HomeScreen(
+                onNavigateToSearch = { navController.navigate(Destinations.SEARCH) },
+                onNavigateToProfile = { navController.navigate(Destinations.PROFILE) },
+                onNavigateToLibrary = { navController.navigate(Destinations.LIBRARY) },
+                onNavigateToPlayer = { navController.navigate(Destinations.PLAYER) }
+            )
+        }
+
+        composable(Destinations.SEARCH) {
+            SearchScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
+        composable(Destinations.LIBRARY) {
+            LibraryScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
+        composable(Destinations.PROFILE) {
+            ProfileScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
+        composable(Destinations.PLAYER) {
+            PlayerScreen(onNavigateBack = { navController.popBackStack() })
         }
     }
 }
