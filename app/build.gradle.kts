@@ -1,4 +1,6 @@
 // app/build.gradle.kts
+import java.util.Properties
+import java.io.FileInputStream
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -17,8 +19,19 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.reader())
+        }
+
+        val spotifyClientId = localProperties.getProperty("SPOTIFY_CLIENT_ID") ?: ""
+        val spotifyClientSecret = localProperties.getProperty("SPOTIFY_CLIENT_SECRET") ?: ""
+
+        buildConfigField("String", "SPOTIFY_CLIENT_ID", "\"$spotifyClientId\"")
+        buildConfigField("String", "SPOTIFY_CLIENT_SECRET", "\"$spotifyClientSecret\"")
+
     }
 
     buildTypes {
@@ -42,6 +55,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {

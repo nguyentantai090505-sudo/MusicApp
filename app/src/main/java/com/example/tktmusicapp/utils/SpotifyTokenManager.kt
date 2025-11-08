@@ -18,7 +18,7 @@ object SpotifyTokenManager {
             val retrofit = Retrofit.Builder().baseUrl("https://accounts.spotify.com/").addConverterFactory(GsonConverterFactory.create()).build()
             val service = retrofit.create(SpotifyApiService::class.java)
             val auth = Credentials.basic(SpotifyConfig.CLIENT_ID, SpotifyConfig.CLIENT_SECRET)
-            val response = service.getToken(auth, "client_credentials")  // Thêm hàm này vào SpotifyApiService nếu chưa có
+            val response = service.getToken(auth, "client_credentials")
             token = "Bearer ${response.access_token}"
             expiresAt = System.currentTimeMillis() + (response.expires_in * 1000L) - 60000L
         }
