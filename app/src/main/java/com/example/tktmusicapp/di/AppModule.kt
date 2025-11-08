@@ -35,7 +35,7 @@ object AppModule {
         auth: FirebaseAuth
     ) = FirebaseFirestoreService(firestore, auth)
 
-    // ====== SPOTIFY MỚI – ĐÃ ĐƯA VÀO TRONG OBJECT ======
+
     @Provides @Singleton
     fun provideSpotifyOkHttp(): OkHttpClient = OkHttpClient.Builder().build()
 
@@ -54,9 +54,3 @@ object AppModule {
 }
 
 
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class RepositoryModule {
-    @Binds @Singleton
-    abstract fun bindMusicRepository(impl: MusicRepositoryImpl): MusicRepository
-}

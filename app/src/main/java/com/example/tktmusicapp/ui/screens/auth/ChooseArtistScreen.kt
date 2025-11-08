@@ -1,5 +1,7 @@
 package com.example.tktmusicapp.ui.screens.auth
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -11,6 +13,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -38,7 +44,7 @@ fun ChooseArtistScreen(
             OutlinedTextField(
                 value = query,
                 onValueChange = viewModel::updateSearchQuery,
-                placeholder = { Text("Tìm: Taylor Swift, BTS, Sơn Tùng, Blackpink...") },
+                placeholder = { Text("Tìm kiếm nghệ sĩ") },
                 leadingIcon = { Icon(Icons.Default.Search, null) },
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
             )
@@ -74,7 +80,7 @@ fun ChooseArtistScreen(
                 if (isLoading) {
                     CircularProgressIndicator(modifier = Modifier.size(20.dp), color = MaterialTheme.colorScheme.onPrimary)
                 }
-                Text(" TIẾP TỤC & LƯU (${selected.size}/5)")
+                Text(" TIẾP TỤC(${selected.size}/5)")
             }
         }
     }
@@ -86,26 +92,51 @@ fun ArtistCard(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    Card(
-        modifier = Modifier.padding(8.dp).size(120.dp),
-        onClick = onClick,
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
-        )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(8.dp)
+            .width(120.dp)
+            .clickable { onClick() }
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(8.dp)) {
+
+        Box(
+            modifier = Modifier
+                .size(100.dp)
+                .clip(CircleShape)
+                .border(
+                    width = if (isSelected) 4.dp else 0.dp,
+                    color = if (isSelected) Color(0xFF6C63FF) else Color.Transparent,
+                    shape = CircleShape
+                )
+                .padding(4.dp)
+        ) {
             AsyncImage(
                 model = artist.images.firstOrNull()?.url ?: "https://via.placeholder.com/640",
-                contentDescription = null,
-                modifier = Modifier.size(80.dp).clip(CircleShape)
+                contentDescription = artist.name,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
             )
-            Spacer(Modifier.height(4.dp))
-            Text(artist.name, maxLines = 1, style = MaterialTheme.typography.labelSmall)
         }
+
+        Spacer(Modifier.height(8.dp))
+
+
+        Text(
+            text = artist.name,
+            style = MaterialTheme.typography.labelMedium,
+            color = Color.White,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
-// Nếu chưa có SkeletonLoading, tạo tạm file ui/components/common/SkeletonLoading.kt
+
 @Composable
 fun SkeletonLoading() {
     Box(modifier = Modifier.padding(8.dp).size(120.dp).shimmer())

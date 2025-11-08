@@ -36,15 +36,17 @@ class ChooseArtistViewModel @Inject constructor(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
 
-    private var searchJob: Job? = null
+
+    private var loadJob: Job? = null
 
     init {
+
         loadVietNamHotArtistsReal()
+
+
         viewModelScope.launch {
-            _searchQuery.debounce(300).collectLatest { query ->
-                if (query.isBlank()) {
-                    loadVietNamHotArtistsReal()
-                } else {
+            _searchQuery.debounce(400).collectLatest { query ->
+                if (query.isNotBlank()) {
                     searchArtistsReal(query)
                 }
             }
@@ -53,11 +55,15 @@ class ChooseArtistViewModel @Inject constructor(
 
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
+        if (query.isBlank()) {
+
+            loadVietNamHotArtistsReal()
+        }
     }
 
     private fun loadVietNamHotArtistsReal() {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
             try {
@@ -74,13 +80,13 @@ class ChooseArtistViewModel @Inject constructor(
                         async {
                             val result = searchSpotifyUseCase(name)
                             if (result is Result.Success) {
-                                result.data?.artists?.items?.firstOrNull()
+                                result.data?.artists?.items?.firstOrNull { it.name.contains(name, ignoreCase = true) }
                             } else null
                         }
                     }.awaitAll().filterNotNull()
                 }
 
-                _artists.value = results.distinctBy { it.id }
+                _artists.value = results.distinctBy { it.id }.take(50)
             } catch (e: Exception) {
                 _error.value = "Lỗi mạng: ${e.message}"
             } finally {
@@ -90,18 +96,15 @@ class ChooseArtistViewModel @Inject constructor(
     }
 
     private fun searchArtistsReal(query: String) {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
             val result = searchSpotifyUseCase(query)
             if (result is Result.Success) {
                 _artists.value = result.data?.artists?.items.orEmpty()
             } else if (result is Result.Error) {
-
-                _error.value = result.message ?: result.exception?.message ?: "Không tìm thấy nghệ sĩ"
-            } else {
-                _error.value = "Không tìm thấy nghệ sĩ"
+                _error.value = result.message ?: result.exception?.message ?: "Không tìm thấy"
             }
             _isLoading.value = false
         }
