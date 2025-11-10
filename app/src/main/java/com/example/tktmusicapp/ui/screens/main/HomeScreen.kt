@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryMusic
@@ -72,7 +71,7 @@ fun HomeScreen(
         // Header + Search Box
         Column {
             Text(
-                text = "Hello 🎵",
+                text = "Search...",
                 color = TextPrimary,
                 style = MaterialTheme.typography.headlineMedium
             )
@@ -104,7 +103,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // New Releases Section
+            // New Releases Section - TĂNG CHIỀU CAO LazyRow
             if (newReleases.isNotEmpty()) {
                 Text(
                     text = "New Releases",
@@ -114,7 +113,10 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                LazyRow(
+                    modifier = Modifier.height(180.dp), // TĂNG CHIỀU CAO
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     items(newReleases.take(10)) { album ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -154,7 +156,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(20.dp))
             }
 
-            // Top Tracks from Favorite Artists Section
+            // Top Tracks from Favorite Artists Section - TĂNG CHIỀU CAO LazyRow
             Text(
                 text = "From Your Favorite Artists",
                 color = TextPrimary,
@@ -164,8 +166,11 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
             if (isLoading) {
-                // Loading skeleton
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                // Loading skeleton - TĂNG CHIỀU CAO
+                LazyRow(
+                    modifier = Modifier.height(180.dp), // TĂNG CHIỀU CAO
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     items(5) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -205,8 +210,11 @@ fun HomeScreen(
                     }
                 }
             } else if (artistTopTracks.isNotEmpty()) {
-                // Top tracks from favorite artists
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                // Top tracks from favorite artists - TĂNG CHIỀU CAO
+                LazyRow(
+                    modifier = Modifier.height(180.dp), // TĂNG CHIỀU CAO
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     items(artistTopTracks.take(10)) { track ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -252,7 +260,7 @@ fun HomeScreen(
             }
         }
 
-        // Bottom Navigation
+        // Bottom Navigation - GIỮ NGUYÊN
         Row(
             modifier = Modifier
                 .fillMaxWidth()
