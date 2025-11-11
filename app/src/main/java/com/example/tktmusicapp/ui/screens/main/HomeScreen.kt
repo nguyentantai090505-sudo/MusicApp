@@ -64,7 +64,7 @@ fun HomeScreen(
 
         // Greeting Header
         Text(
-            text = "Hello 🎵",
+            text = "App Music",
             color = TextPrimary,
             style = MaterialTheme.typography.headlineMedium
         )

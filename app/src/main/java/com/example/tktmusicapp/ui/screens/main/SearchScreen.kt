@@ -29,6 +29,7 @@ import com.example.tktmusicapp.ui.theme.BackgroundDark
 import com.example.tktmusicapp.viewmodel.PlayerViewModel
 import com.example.tktmusicapp.viewmodel.SearchViewModel
 import com.example.tktmusicapp.data.model.spotify.TrackItem
+import com.example.tktmusicapp.ui.theme.TextPrimary
 import com.example.tktmusicapp.viewmodel.SearchResults
 
 @Composable
@@ -65,6 +66,11 @@ fun SearchScreen(
             IconButton(onClick = onNavigateBack) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
             }
+            Text(
+                text = "Search",
+                color = TextPrimary,
+                style = MaterialTheme.typography.headlineMedium
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
