@@ -1,5 +1,6 @@
 package com.example.tktmusicapp.di
 
+import android.content.Context
 import com.example.tktmusicapp.data.remote.FirebaseAuthService
 import com.example.tktmusicapp.data.remote.FirebaseFirestoreService
 import com.example.tktmusicapp.data.remote.SpotifyApiService
@@ -13,12 +14,14 @@ import com.example.tktmusicapp.domain.usecase.user.SaveTrackUseCase
 import com.example.tktmusicapp.domain.usecase.user.UploadAvatarUseCase
 import com.example.tktmusicapp.repository.MusicRepository
 import com.example.tktmusicapp.repository.impl.MusicRepositoryImpl
+import com.example.tktmusicapp.viewmodel.PlayerViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -65,6 +68,12 @@ object AppModule {
             .create(SpotifyApiService::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun providePlayerViewModel(@ApplicationContext context: Context): PlayerViewModel {
+        return PlayerViewModel(context)
+    }
+
     @Module
     @InstallIn(SingletonComponent::class)
     object UseCaseModule {
@@ -108,6 +117,7 @@ object AppModule {
         fun provideMusicRepositoryImpl(api: SpotifyApiService): MusicRepositoryImpl =
             MusicRepositoryImpl(api)
     }
+
     @Provides
     @Singleton
     fun provideUploadAvatarUseCase(): UploadAvatarUseCase {
@@ -120,5 +130,3 @@ object AppModule {
         return GetAvatarUrlUseCase()
     }
 }
-
-

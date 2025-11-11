@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,19 +17,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.example.tktmusicapp.domain.model.Song
 import com.example.tktmusicapp.ui.theme.BackgroundDark
+import com.example.tktmusicapp.viewmodel.PlayerViewModel
 import com.example.tktmusicapp.viewmodel.SearchViewModel
+import com.example.tktmusicapp.data.model.spotify.TrackItem
+import com.example.tktmusicapp.viewmodel.SearchResults
 
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
+    playerViewModel: PlayerViewModel,
     onNavigateBack: () -> Unit
 ) {
     val searchQuery by viewModel.searchQuery.collectAsState()
@@ -58,7 +63,7 @@ fun SearchScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             IconButton(onClick = onNavigateBack) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
             }
         }
 
@@ -104,37 +109,24 @@ fun SearchScreen(
 
         when {
             isLoading -> {
-                // Loading state
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = Color.White)
                 }
             }
             error != null -> {
-                // Error state
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = error!!,
-                        color = Color.Red,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                    Button(onClick = { viewModel.clearError() }) {
-                        Text("OK")
-                    }
+                    Text(text = error!!, color = Color.Red, modifier = Modifier.padding(16.dp))
+                    Button(onClick = { viewModel.clearError() }) { Text("OK") }
                 }
             }
             searchResults != null -> {
-                // Search results
-                SearchResultsContent(searchResults!!)
+                SearchResultsContent(searchResults!!, playerViewModel)
             }
             searchQuery.isEmpty() && recentSearches.isNotEmpty() -> {
-                // Recent searches
                 RecentSearchesContent(
                     recentSearches = recentSearches,
                     onSearchClick = viewModel::searchImmediately,
@@ -142,10 +134,8 @@ fun SearchScreen(
                 )
             }
             else -> {
-                // Empty state
                 Text(
-                    text = if (searchQuery.isEmpty()) "Type something to start searching 🔍"
-                    else "No results found for: $searchQuery",
+                    text = if (searchQuery.isEmpty()) "Type something to start searching 🔍" else "No results found for: $searchQuery",
                     color = Color.White.copy(alpha = 0.8f),
                     fontSize = 15.sp,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -156,115 +146,50 @@ fun SearchScreen(
 }
 
 @Composable
-private fun SearchResultsContent(results: com.example.tktmusicapp.viewmodel.SearchResults) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        // Tracks Section
+private fun SearchResultsContent(results: SearchResults, playerViewModel: PlayerViewModel) {
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         if (results.tracks.isNotEmpty()) {
-            item {
-                Text("Songs", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            }
+            item { Text("Songs", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold) }
             items(results.tracks.take(10)) { track ->
-                TrackItem(track = track)
+                TrackItem(track = track, playerViewModel = playerViewModel)
             }
         }
-
-        // Artists Section
-        if (results.artists.isNotEmpty()) {
-            item {
-                Text("Artists", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            }
-            items(results.artists.take(10)) { artist ->
-                ArtistItem(artist = artist)
-            }
-        }
-
-        // Albums Section
-        if (results.albums.isNotEmpty()) {
-            item {
-                Text("Albums", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            }
-            items(results.albums.take(10)) { album ->
-                AlbumItem(album = album)
-            }
-        }
+        // Sections for Artists and Albums can be added here if needed
     }
 }
 
+fun TrackItem.toSong(): Song {
+    return Song(
+        id = this.id,
+        title = this.name,
+        artist = this.artists.joinToString { it.name },
+        albumArtUrl = this.album.images.firstOrNull()?.url ?: "",
+        songUrl = this.preview_url ?: ""
+    )
+}
+
 @Composable
-private fun TrackItem(track: com.example.tktmusicapp.data.model.spotify.TrackItem) {
+private fun TrackItem(track: TrackItem, playerViewModel: PlayerViewModel) {
+    val hasPreview = track.preview_url != null
+    val alpha = if (hasPreview) 1f else 0.5f
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { /* Play track */ }
+            .graphicsLayer(alpha = alpha)
+            .clickable(enabled = hasPreview) { playerViewModel.play(track.toSong()) }
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
             model = track.album.images.firstOrNull()?.url ?: "https://via.placeholder.com/640",
             contentDescription = track.name,
-            modifier = Modifier
-                .size(50.dp)
-                .clip(RoundedCornerShape(8.dp))
+            modifier = Modifier.size(50.dp).clip(RoundedCornerShape(8.dp))
         )
         Spacer(modifier = Modifier.width(12.dp))
         Column {
             Text(track.name, color = Color.White, fontSize = 16.sp)
-            Text(
-                track.artists.joinToString { it.name },
-                color = Color.White.copy(alpha = 0.7f),
-                fontSize = 14.sp
-            )
-        }
-    }
-}
-
-@Composable
-private fun ArtistItem(artist: com.example.tktmusicapp.data.model.spotify.ArtistItem) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { /* Navigate to artist */ }
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        AsyncImage(
-            model = artist.images.firstOrNull()?.url ?: "https://via.placeholder.com/640",
-            contentDescription = artist.name,
-            modifier = Modifier
-                .size(50.dp)
-                .clip(RoundedCornerShape(25.dp))
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(artist.name, color = Color.White, fontSize = 16.sp)
-    }
-}
-
-@Composable
-private fun AlbumItem(album: com.example.tktmusicapp.data.model.spotify.AlbumItem) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { /* Navigate to album */ }
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        AsyncImage(
-            model = album.images.firstOrNull()?.url ?: "https://via.placeholder.com/640",
-            contentDescription = album.name,
-            modifier = Modifier
-                .size(50.dp)
-                .clip(RoundedCornerShape(8.dp))
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Column {
-            Text(album.name, color = Color.White, fontSize = 16.sp)
-            Text(
-                album.artists.joinToString { it.name },
-                color = Color.White.copy(alpha = 0.7f),
-                fontSize = 14.sp
-            )
+            Text(track.artists.joinToString { it.name }, color = Color.White.copy(alpha = 0.7f), fontSize = 14.sp)
         }
     }
 }
@@ -282,28 +207,16 @@ private fun RecentSearchesContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("Recent Searches", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Text(
-                "Clear",
-                color = Color(0xFF6C63FF),
-                modifier = Modifier.clickable { onClearRecent() }
-            )
+            Text("Clear", color = Color(0xFF6C63FF), modifier = Modifier.clickable { onClearRecent() })
         }
         Spacer(modifier = Modifier.height(16.dp))
         LazyColumn {
             items(recentSearches) { query ->
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onSearchClick(query) }
-                        .padding(vertical = 12.dp),
+                    modifier = Modifier.fillMaxWidth().clickable { onSearchClick(query) }.padding(vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search",
-                        tint = Color.White.copy(alpha = 0.7f),
-                        modifier = Modifier.size(20.dp)
-                    )
+                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search", tint = Color.White.copy(alpha = 0.7f), modifier = Modifier.size(20.dp))
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(query, color = Color.White, fontSize = 16.sp)
                 }

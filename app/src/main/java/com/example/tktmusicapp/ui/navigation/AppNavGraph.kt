@@ -1,6 +1,7 @@
 package com.example.tktmusicapp.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,10 +14,12 @@ import com.example.tktmusicapp.ui.screens.main.PlayerScreen
 import com.example.tktmusicapp.ui.screens.main.ProfileScreen
 import com.example.tktmusicapp.ui.screens.main.SearchScreen
 import com.example.tktmusicapp.ui.screens.main.LibraryScreen
+import com.example.tktmusicapp.viewmodel.PlayerViewModel
 
 @Composable
 fun AppNavGraph(
     navController: NavHostController,
+    playerViewModel: PlayerViewModel,
     startDestination: String = Destinations.WELCOME
 ) {
     NavHost(
@@ -52,7 +55,6 @@ fun AppNavGraph(
             )
         }
 
-        // ĐÃ FIX: onContinue → onComplete, navigate đúng HOME + clear backstack
         composable(Destinations.CHOOSE_ARTIST) {
             ChooseArtistScreen(
                 onContinue = {
@@ -66,6 +68,8 @@ fun AppNavGraph(
 
         composable(Destinations.HOME) {
             HomeScreen(
+                homeViewModel = hiltViewModel(),
+                playerViewModel = playerViewModel,
                 onNavigateToSearch = { navController.navigate(Destinations.SEARCH) },
                 onNavigateToProfile = { navController.navigate(Destinations.PROFILE) },
                 onNavigateToLibrary = { navController.navigate(Destinations.LIBRARY) },
@@ -74,7 +78,10 @@ fun AppNavGraph(
         }
 
         composable(Destinations.SEARCH) {
-            SearchScreen(onNavigateBack = { navController.popBackStack() })
+            SearchScreen(
+                playerViewModel = playerViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
 
         composable(Destinations.LIBRARY) {
@@ -86,7 +93,10 @@ fun AppNavGraph(
         }
 
         composable(Destinations.PLAYER) {
-            PlayerScreen(onNavigateBack = { navController.popBackStack() })
+            PlayerScreen(
+                playerViewModel = playerViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
     }
 }
