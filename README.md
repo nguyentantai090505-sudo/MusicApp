@@ -59,5 +59,79 @@ Dự án TKT MUSIC được xây dựng và phát triển dựa trên nền tả
   + Cho phép phát toàn bộ hoặc từng bài riêng lẻ.
 5. Cấu trúc dự án
 
+MusicApp-main/
+├─ .gitignore
+├─ README.md
+└─ app/
+├─ build.gradle.kts
+├─ proguard-rules.pro
+└─ src/
+├─ androidTest/
+│ └─ ... (Test tự động)
+├─ test/
+│ └─ ... (Unit test)
+└─ main/
+├─ AndroidManifest.xml
+├─ java/com/example/tktmusicapp/
+│ ├─ MainActivity.kt
+│ │
+│ ├─ ui/ (Giao diện người dùng)
+│ │ ├─ components/
+│ │ │ ├─ CustomButton.kt
+│ │ │ ├─ InputField.kt
+│ │ │ └─ SongItem.kt
+│ │ ├─ screens/
+│ │ │ ├─ login/LoginScreen.kt
+│ │ │ ├─ register/RegisterScreen.kt
+│ │ │ ├─ home/HomeScreen.kt
+│ │ │ ├─ player/PlayerScreen.kt
+│ │ │ └─ splash/SplashScreen.kt
+│ │ └─ theme/
+│ │ ├─ Color.kt
+│ │ ├─ Theme.kt
+│ │ ├─ Typography.kt
+│ │ └─ Shape.kt
+│ │
+│ ├─ navigation/
+│ │ ├─ AppNavGraph.kt
+│ │ └─ Routes.kt
+│ │
+│ ├─ data/
+│ │ ├─ local/
+│ │ │ └─ PreferencesManager.kt
+│ │ ├─ remote/
+│ │ │ ├─ FirebaseAuthService.kt
+│ │ │ ├─ FirebaseFirestoreService.kt
+│ │ │ └─ SpotifyApiService.kt
+│ │ ├─ repository/
+│ │ │ ├─ AuthRepository.kt
+│ │ │ ├─ MusicRepository.kt
+│ │ │ └─ impl/
+│ │ │ ├─ AuthRepositoryImpl.kt
+│ │ │ └─ MusicRepositoryImpl.kt
+│ │
+│ ├─ domain/
+│ │ └─ model/
+│ │ ├─ Song.kt
+│ │ ├─ Playlist.kt
+│ │ └─ User.kt
+│ │
+│ ├─ di/ (Dependency Injection bằng Hilt)
+│ │ ├─ AppModule.kt
+│ │ ├─ AuthModule.kt
+│ │ └─ RepositoryModule.kt
+│ │
+│ └─ utils/
+│ ├─ Constants.kt
+│ └─ Validation.kt
+│
+└─ res/
+├─ layout/ (XML UI)
+├─ drawable/
+├─ values/
+│ ├─ colors.xml
+│ ├─ themes.xml
+│ └─ strings.xml
+└─ mipmap/ (icon app)
 
 6. Cài đặt ứng dụng + demo ứng dụng
