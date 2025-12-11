@@ -133,5 +133,5 @@ MusicApp-main/
 │            │   └─ strings.xml
 │            └─ mipmap/           # Icon ứng dụng
 └─ ... (các file Gradle khác ở root)
-            
+                  
 6. Cài đặt ứng dụng + demo ứng dụng
