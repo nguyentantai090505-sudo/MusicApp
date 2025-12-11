@@ -41,12 +41,12 @@ Dự án TKT MUSIC được xây dựng và phát triển dựa trên nền tả
   + Ngôn ngữ lập trình: Kotlin
   + Framework UI: Jetpack Compose
   + Kiến trúc ứng dụng: ---
-  + Cơ sở dữ liệu cục bộ:---
+  + Cơ sở dữ liệu cục bộ: Google Drive
   + Quản lý bất đồng bộ: ---
-  +  ---
 - Backend as a Service
   + Google Firebase: Authenication: Quản lí người dùng và xác thực người dùng
-                     Firestore database:
+
+    Firestore database:
 - Công cụ phát triển và triển khai
 4. Các tính năng chính của của ứng dụng
 - Phát nhạc trực tuyến:
