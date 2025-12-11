@@ -42,13 +42,10 @@ Dự án TKT MUSIC được xây dựng và phát triển dựa trên nền tả
   + Ngôn ngữ lập trình: Kotlin
   + Framework UI: Jetpack Compose
   + Kiến trúc ứng dụng:
-      MVVM
-    
-      Clean Architecture (3 tầng)
-    
-      Repository Pattern
-    
-      Hilt Dependency Injection
+      - MVVM
+      - Clean Architecture (3 tầng)
+      - Repository Pattern
+      - Hilt Dependency Injection
 4. Các tính năng chính của của ứng dụng
 - Phát nhạc trực tuyến:
   + Phát nhạc qua API, các bài hát có dính bản quyền từ phía nguồn API sẽ được thay thế bằng dữ liệu demo nhạc tự soạn
