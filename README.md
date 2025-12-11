@@ -59,7 +59,8 @@ Dự án TKT MUSIC được xây dựng và phát triển dựa trên nền tả
   + Cho phép phát toàn bộ hoặc từng bài riêng lẻ.
 5. Cấu trúc dự án
 
-MusicApp-main/
+
+/MusicApp-main/
 ├─ .gitignore
 ├─ README.md
 └─ app/
