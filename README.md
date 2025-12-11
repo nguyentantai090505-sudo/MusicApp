@@ -42,69 +42,10 @@ Dự án TKT MUSIC được xây dựng và phát triển dựa trên nền tả
   + Ngôn ngữ lập trình: Kotlin
   + Framework UI: Jetpack Compose
   + Kiến trúc ứng dụng:
- 
-      Ứng dụng MusicApp sử dụng một kiến trúc gồm 4 phần chính (4 kiến trúc kết hợp). Đây là toàn bộ những gì app đang dùng:
-      Bao gồm
-      1. MVVM Architecture (Model – View – ViewModel)
-
-        + View (UI) chỉ hiển thị giao diện
-
-        + ViewModel xử lý logic
-
-        + Model đại diện dữ liệu (Song, User…)
-
-        -> Giúp UI gọn, dễ bảo trì.
-
-2. Clean Architecture (chia 3 tầng)
-
-Ứng dụng chia thành:
-
-- Presentation (UI + ViewModel)
-
-Hiển thị và tương tác.
-
-- Domain (Model)
-
-Chỉ chứa dữ liệu lõi.
-
-- Data (Firebase, Spotify API, Local Storage)
-
-Lấy dữ liệu từ server hoặc local.
-
--> Các tầng tách biệt → sửa 1 tầng không ảnh hưởng tầng khác.
-
-3. Repository Pattern
-
-UI không lấy dữ liệu trực tiếp
-
-ViewModel chỉ gọi Repository
-
-Repository quyết định lấy dữ liệu từ:
-
-Firebase Auth
-
-Firebase Firestore
-
-Spotify API
-
-SharedPreferences
-
-Dễ thay đổi nguồn dữ liệu, test tốt hơn.
-
-4. Dependency Injection (Hilt)
-
-Quản lý và cấp phát tự động các đối tượng như:
-Firebase, Retrofit, Repository…
-
-Giúp code sạch, không phải new thủ công.
-
-  + Cơ sở dữ liệu cục bộ: Google Drive
-  + 
-  + Quản lý bất đồng bộ: ---
-- Backend as a Service
-  + Google Firebase: Authenication: Quản lí người dùng và xác thực người dùng
-  + Firestore database:
-- Công cụ phát triển và triển khai
+      MVVM
+      Clean Architecture (3 tầng)
+      Repository Pattern
+      Hilt Dependency Injection
 4. Các tính năng chính của của ứng dụng
 - Phát nhạc trực tuyến:
   + Phát nhạc qua API, các bài hát có dính bản quyền từ phía nguồn API sẽ được thay thế bằng dữ liệu demo nhạc tự soạn
@@ -118,84 +59,5 @@ Giúp code sạch, không phải new thủ công.
   + Cho phép phát toàn bộ hoặc từng bài riêng lẻ.
 5. Cấu trúc dự án
 
-MusicApp-main/
-├─ .gitignore
-
-├─ README.md
-
-└─ app/
-
-   ├─ build.gradle.kts
-   
-   ├─ proguard-rules.pro
-   
-   └─ src/
-      ├─ androidTest/
-      │   └─ ... (Test tự động)
-      ├─ test/
-      │   └─ ... (Unit test)
-      └─ main/
-         ├─ AndroidManifest.xml
-         ├─ java/com/example/tktmusicapp/
-         │   ├─ MainActivity.kt
-         │   │
-         │   ├─ ui/ (Giao diện người dùng)
-         │   │   ├─ components/
-         │   │   │   ├─ CustomButton.kt
-         │   │   │   ├─ InputField.kt
-         │   │   │   └─ SongItem.kt
-         │   │   ├─ screens/
-         │   │   │   ├─ login/LoginScreen.kt
-         │   │   │   ├─ register/RegisterScreen.kt
-         │   │   │   ├─ home/HomeScreen.kt
-         │   │   │   ├─ player/PlayerScreen.kt
-         │   │   │   └─ splash/SplashScreen.kt
-         │   │   └─ theme/
-         │   │       ├─ Color.kt
-         │   │       ├─ Theme.kt
-         │   │       ├─ Typography.kt
-         │   │       └─ Shape.kt
-         │   │
-         │   ├─ navigation/
-         │   │   ├─ AppNavGraph.kt
-         │   │   └─ Routes.kt
-         │   │
-         │   ├─ data/
-         │   │   ├─ local/
-         │   │   │   └─ PreferencesManager.kt
-         │   │   ├─ remote/
-         │   │   │   ├─ FirebaseAuthService.kt
-         │   │   │   ├─ FirebaseFirestoreService.kt
-         │   │   │   └─ SpotifyApiService.kt
-         │   │   ├─ repository/
-         │   │   │   ├─ AuthRepository.kt
-         │   │   │   ├─ MusicRepository.kt
-         │   │   │   └─ impl/
-         │   │   │       ├─ AuthRepositoryImpl.kt
-         │   │   │       └─ MusicRepositoryImpl.kt
-         │   │
-         │   ├─ domain/
-         │   │   └─ model/
-         │   │       ├─ Song.kt
-         │   │       ├─ Playlist.kt
-         │   │       └─ User.kt
-         │   │
-         │   ├─ di/ (Dependency Injection bằng Hilt)
-         │   │   ├─ AppModule.kt
-         │   │   ├─ AuthModule.kt
-         │   │   └─ RepositoryModule.kt
-         │   │
-         │   └─ utils/
-         │       ├─ Constants.kt
-         │       └─ Validation.kt
-         │
-         └─ res/
-            ├─ layout/ (chứa các file XML nếu còn dùng XML)
-            ├─ drawable/
-            ├─ values/
-            │   ├─ colors.xml
-            │   ├─ themes.xml
-            │   └─ strings.xml
-            └─ mipmap/ (icon app)
 
 6. Cài đặt ứng dụng + demo ứng dụng
