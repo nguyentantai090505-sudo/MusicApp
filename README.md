@@ -120,10 +120,15 @@ Giúp code sạch, không phải new thủ công.
 
 MusicApp-main/
 ├─ .gitignore
+
 ├─ README.md
+
 └─ app/
+
    ├─ build.gradle.kts
+   
    ├─ proguard-rules.pro
+   
    └─ src/
       ├─ androidTest/
       │   └─ ... (Test tự động)
