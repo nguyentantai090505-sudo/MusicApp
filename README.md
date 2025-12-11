@@ -57,81 +57,81 @@ Dự án TKT MUSIC được xây dựng và phát triển dựa trên nền tả
 - Xem chi tiết album & playlist
   + Hiển thị danh sách bài hát trong album/playlist.
   + Cho phép phát toàn bộ hoặc từng bài riêng lẻ.
-#5. Cấu trúc dự án
+  
+5. Cấu trúc dự án
 
 MusicApp-main/
 ├─ .gitignore
 ├─ README.md
-└─ app/
-   ├─ build.gradle.kts
-   ├─ proguard-rules.pro
-   └─ src/
-      ├─ androidTest/
-      │   └─ ... (Test tự động)
-      ├─ test/
-      │   └─ ... (Unit test)
-      └─ main/
-         ├─ AndroidManifest.xml
-         ├─ java/com/example/tktmusicapp/
-         │   ├─ MainActivity.kt
-         │   │
-         │   ├─ ui/                      # Giao diện người dùng
-         │   │   ├─ components/
-         │   │   │   ├─ CustomButton.kt
-         │   │   │   ├─ InputField.kt
-         │   │   │   └─ SongItem.kt
-         │   │   ├─ screens/
-         │   │   │   ├─ login/LoginScreen.kt
-         │   │   │   ├─ register/RegisterScreen.kt
-         │   │   │   ├─ home/HomeScreen.kt
-         │   │   │   ├─ player/PlayerScreen.kt
-         │   │   │   └─ splash/SplashScreen.kt
-         │   │   └─ theme/
-         │   │       ├─ Color.kt
-         │   │       ├─ Theme.kt
-         │   │       ├─ Typography.kt
-         │   │       └─ Shape.kt
-         │   │
-         │   ├─ navigation/
-         │   │   ├─ AppNavGraph.kt
-         │   │   └─ Routes.kt
-         │   │
-         │   ├─ data/
-         │   │   ├─ local/
-         │   │   │   └─ PreferencesManager.kt
-         │   │   ├─ remote/
-         │   │   │   ├─ FirebaseAuthService.kt
-         │   │   │   ├─ FirebaseFirestoreService.kt
-         │   │   │   └─ SpotifyApiService.kt
-         │   │   ├─ repository/
-         │   │   │   ├─ AuthRepository.kt
-         │   │   │   ├─ MusicRepository.kt
-         │   │   │   └─ impl/
-         │   │   │       ├─ AuthRepositoryImpl.kt
-         │   │   │       └─ MusicRepositoryImpl.kt
-         │   │
-         │   ├─ domain/
-         │   │   └─ model/
-         │   │       ├─ Song.kt
-         │   │       ├─ Playlist.kt
-         │   │       └─ User.kt
-         │   │
-         │   ├─ di/                       # Dependency Injection (Hilt)
-         │   │   ├─ AppModule.kt
-         │   │   ├─ AuthModule.kt
-         │   │   └─ RepositoryModule.kt
-         │   │
-         │   └─ utils/
-         │       ├─ Constants.kt
-         │       └─ Validation.kt
-         │
-         └─ res/
-            ├─ layout/                    # XML UI (nếu có)
-            ├─ drawable/
-            ├─ values/
-            │   ├─ colors.xml
-            │   ├─ themes.xml
-            │   └─ strings.xml
-            └─ mipmap/                    # Icon app
+├─ app/
+│  ├─ build.gradle.kts
+│  ├─ proguard-rules.pro
+│  └─ src/
+│     ├─ androidTest/          # Test tự động (Instrumentation tests)
+│     ├─ test/                 # Unit tests
+│     └─ main/
+│        ├─ AndroidManifest.xml
+│        ├─ java/com/example/tktmusicapp/
+│        │   ├─ MainActivity.kt
+│        │   │
+│        │   ├─ ui/               # Giao diện người dùng (Jetpack Compose)
+│        │   │   ├─ components/   # Thành phần UI tái sử dụng
+│        │   │   │   ├─ CustomButton.kt
+│        │   │   │   ├─ InputField.kt
+│        │   │   │   └─ SongItem.kt
+│        │   │   ├─ screens/      # Các màn hình chính
+│        │   │   │   ├─ login/LoginScreen.kt
+│        │   │   │   ├─ register/RegisterScreen.kt
+│        │   │   │   ├─ home/HomeScreen.kt
+│        │   │   │   ├─ player/PlayerScreen.kt
+│        │   │   │   └─ splash/SplashScreen.kt
+│        │   │   └─ theme/        # Theme Compose
+│        │   │       ├─ Color.kt
+│        │   │       ├─ Theme.kt
+│        │   │       ├─ Typography.kt
+│        │   │       └─ Shape.kt
+│        │   │
+│        │   ├─ navigation/       # Điều hướng
+│        │   │   ├─ AppNavGraph.kt
+│        │   │   └─ Routes.kt
+│        │   │
+│        │   ├─ data/             # Nguồn dữ liệu
+│        │   │   ├─ local/
+│        │   │   │   └─ PreferencesManager.kt
+│        │   │   ├─ remote/       # API services
+│        │   │   │   ├─ FirebaseAuthService.kt
+│        │   │   │   ├─ FirebaseFirestoreService.kt
+│        │   │   │   └─ SpotifyApiService.kt
+│        │   │   └─ repository/
+│        │   │       ├─ AuthRepository.kt
+│        │   │       ├─ MusicRepository.kt
+│        │   │       └─ impl/
+│        │   │           ├─ AuthRepositoryImpl.kt
+│        │   │           └─ MusicRepositoryImpl.kt
+│        │   │
+│        │   ├─ domain/           # Model và use cases
+│        │   │   └─ model/
+│        │   │       ├─ Song.kt
+│        │   │       ├─ Playlist.kt
+│        │   │       └─ User.kt
+│        │   │
+│        │   ├─ di/               # Dependency Injection (Hilt)
+│        │   │   ├─ AppModule.kt
+│        │   │   ├─ AuthModule.kt
+│        │   │   └─ RepositoryModule.kt
+│        │   │
+│        │   └─ utils/            # Tiện ích
+│        │       ├─ Constants.kt
+│        │       └─ Validation.kt
+│        │
+│        └─ res/                  # Resources
+│            ├─ layout/           # XML UI (nếu có, hiện tại dùng Compose nên ít dùng)
+│            ├─ drawable/
+│            ├─ values/
+│            │   ├─ colors.xml
+│            │   ├─ themes.xml
+│            │   └─ strings.xml
+│            └─ mipmap/           # Icon ứng dụng
+└─ ... (các file Gradle khác ở root)
             
 6. Cài đặt ứng dụng + demo ứng dụng
