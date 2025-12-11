@@ -42,36 +42,35 @@ Dự án TKT MUSIC được xây dựng và phát triển dựa trên nền tả
   + Framework UI: Jetpack Compose
   + Kiến trúc ứng dụng:
  
-  + Ứng dụng MusicApp sử dụng một kiến trúc gồm 4 phần chính (4 kiến trúc kết hợp). Đây là toàn bộ những gì app đang dùng:
+      Ứng dụng MusicApp sử dụng một kiến trúc gồm 4 phần chính (4 kiến trúc kết hợp). Đây là toàn bộ những gì app đang dùng:
+      Bao gồm
+      1. MVVM Architecture (Model – View – ViewModel)
 
-KIẾN TRÚC ỨNG DỤNG GỒM:
-1. MVVM Architecture (Model – View – ViewModel)
+        + View (UI) chỉ hiển thị giao diện
 
-View (UI) chỉ hiển thị giao diện
+        + ViewModel xử lý logic
 
-ViewModel xử lý logic
+        + Model đại diện dữ liệu (Song, User…)
 
-Model đại diện dữ liệu (Song, User…)
-
-➡️ Giúp UI gọn, dễ bảo trì.
+        -> Giúp UI gọn, dễ bảo trì.
 
 2. Clean Architecture (chia 3 tầng)
 
 Ứng dụng chia thành:
 
-🔹 Presentation (UI + ViewModel)
+- Presentation (UI + ViewModel)
 
 Hiển thị và tương tác.
 
-🔹 Domain (Model)
+- Domain (Model)
 
 Chỉ chứa dữ liệu lõi.
 
-🔹 Data (Firebase, Spotify API, Local Storage)
+- Data (Firebase, Spotify API, Local Storage)
 
 Lấy dữ liệu từ server hoặc local.
 
-➡️ Các tầng tách biệt → sửa 1 tầng không ảnh hưởng tầng khác.
+-> Các tầng tách biệt → sửa 1 tầng không ảnh hưởng tầng khác.
 
 3. Repository Pattern
 
