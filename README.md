@@ -58,6 +58,7 @@ Dự án TKT MUSIC được xây dựng và phát triển dựa trên nền tả
   + Hiển thị danh sách bài hát trong album/playlist.
   + Cho phép phát toàn bộ hoặc từng bài riêng lẻ.
 5. Cấu trúc dự án
+'''
 MusicApp-main/
 ├─ .gitignore
 ├─ README.md
@@ -132,5 +133,5 @@ MusicApp-main/
             │   ├─ themes.xml
             │   └─ strings.xml
             └─ mipmap/                    # Icon app
-
+'''
 6. Cài đặt ứng dụng + demo ứng dụng
