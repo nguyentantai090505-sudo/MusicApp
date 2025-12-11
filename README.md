@@ -1,6 +1,6 @@
 TKT MUSIC - ỨNG NGHE NHẠC HIỆN ĐẠI
 UI Figma
------ thêm figma --
+https://www.figma.com/design/F55V60fdyBtNJexO0fjgt2/App-nghe-nh%E1%BA%A1c?node-id=0-1&t=zdDFbTI1YTiPZE35-1
 1. Tên dự án và chủ đề
 Sơ lược về dự án
 TKT MUSIC là ứng dụng nghe nhạc được xây dựng như một bản demo mô phỏng Spotify, tập trung vào giao diện hiện đại, trải nghiệm người dùng mượt mà và các tính năng cốt lõi của một ứng dụng streaming nhạc.
